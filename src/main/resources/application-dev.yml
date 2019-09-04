@@ -1,0 +1,8 @@
+server:
+  port: 8090
+#spring:
+#  datasource:
+#    # 个人服务器数据库
+#    url: 'jdbc:mysql://192.168.101.100/demo?useSSL=false'
+#    username: 'root'
+#    password: '123456'

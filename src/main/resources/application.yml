@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+wechat:
+  corpid: ww4783b5de3fda6acd
+  corpsecret: ww4783b5de3fda6acd
