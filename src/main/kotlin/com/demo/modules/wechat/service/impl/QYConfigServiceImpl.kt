@@ -9,15 +9,15 @@ import java.util.*
 
 /**
  * 微信jssdk相关实现类
- * Created by chenwenjian on 2019/1/10.
+ * Created by yeqinhua on 2019/1/10.
  *
- * @author chenwenjian
+ * @author yeqinhua
  * @since 0.0.1
  */
 @Service
 class QYConfigServiceImpl(private val wechatUtils: WechatUtils, private val oauth2Business: QYUserBusiness) : QYConfigService {
 
-  override fun getConfig(url: String, agent: Boolean): JSSDKConfig {
+  override fun getConfig(url: String, nonceStr: String, timestamp: String, isAgent: Boolean): JSSDKConfig {
     val config = JSSDKConfig().apply {
       this.appId = "ww4783b5de3fda6acd"
       this.nonceStr = UUID.randomUUID().toString()
@@ -25,11 +25,11 @@ class QYConfigServiceImpl(private val wechatUtils: WechatUtils, private val oaut
     }
     val map = TreeMap<String, String>()
     // 两种 ticket
-    val ticket = if (agent) wechatUtils.getAgentJsApiTicket() else wechatUtils.getJsApiTicket()
+    val ticket = if (isAgent) wechatUtils.getAgentJsApiTicket() else wechatUtils.getJsApiTicket()
     map.putAll(mapOf(
-        "noncestr" to config.nonceStr!!,
         "jsapi_ticket" to ticket,
-        "timestamp" to config.timestamp!!,
+        "noncestr" to if (isAgent) nonceStr else config.nonceStr!!,
+        "timestamp" to if (isAgent) timestamp else config.timestamp!!,
         "url" to url
     ))
     config.signature = WechatUtils.signBySha1(map)

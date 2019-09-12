@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 
 /**
  * 微信接口返回共同属性
- * Created by chenwenjian on 2019/1/10.
- * @author chenwenjian
+ * Created by yeqinhua on 2019/1/10.
+ * @author yeqinhua
  * @since 0.0.1
  */
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)

@@ -21,8 +21,8 @@ class QYJSSDKAction(private val wechatJsSdkService: QYConfigService) {
    * @param  isAgent 是否 agentConfig
    */
   @GetMapping("config")
-  fun config(url: String, isAgent: Boolean): Any {
-    return wechatJsSdkService.getConfig(url, isAgent)
+  fun config(url: String, nonceStr: String, timestamp: String, isAgent: Boolean): Any {
+    return wechatJsSdkService.getConfig(url, nonceStr, timestamp, isAgent)
   }
 
 }

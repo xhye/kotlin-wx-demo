@@ -5,9 +5,9 @@ import java.util.*
 
 /**
  *
- * Created by chenwenjian on 2019/1/10.
+ * Created by yeqinhua on 2019/1/10.
  *
- * @author chenwenjian
+ * @author yeqinhua
  * @since 0.0.1
  */
 data class JSSDKConfig(
