@@ -10,7 +10,7 @@ spring:
 # mybatis
 mybatis:
   mapper-locations: classpath:mapper/*/*.xml
-  type-aliases-package: com.aegis.modules.*.*
+  type-aliases-package: com.aegis.modules.*.model
 #pagehelper
 pagehelper:
   helperDialect: mysql # 方言
