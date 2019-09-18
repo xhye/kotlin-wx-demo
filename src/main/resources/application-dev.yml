@@ -1,12 +1,23 @@
 server:
   port: 8090
+  servlet:
+    session:
+      timeout: 1800 # session 失效时间 秒
+
 spring:
+#  session:
+#    store-type: redis # session 的存储方式  session共享
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # 个人服务器数据库
     url: 'jdbc:mysql://192.168.101.100/demo?useSSL=false'
     username: 'root'
     password: '123456'
+  redis:
+    database: 0
+    host: 192.168.101.100
+    port: 6379
+    password: 123456
 # mybatis
 mybatis:
   mapper-locations: classpath:mapper/*/*.xml

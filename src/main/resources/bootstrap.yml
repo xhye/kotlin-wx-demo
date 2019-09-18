@@ -14,3 +14,7 @@ spring:
       enabled: false
     consul:
       enabled: false
+logging:
+  level:
+    com.aegis.modules.*.dao: info
+    com.aegis.modules.*.service: info

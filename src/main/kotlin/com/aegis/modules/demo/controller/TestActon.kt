@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 /**
- * demo
+ * {demo}
  * Created by {creator} on {create date}.
  *
  * @author {creator}

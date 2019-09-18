@@ -9,11 +9,12 @@ import java.util.ArrayList
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.userdetails.User
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 
 /**
- * 企业微信用户业务接口实现
+ * 企业微信用户登录接口实现
  * Created by yeqinhua on 2019/9/16.
  *
  * @author yeqinhua
@@ -24,12 +25,12 @@ class UserServiceImpl(private val workUserService: WorkUserService) : UserDetail
   override fun loadUserByUsername(username: String): UserDetails? {
 //    AuthorityUtils.commaSeparatedStringToAuthorityList("user")
     val authorities = ArrayList<GrantedAuthority>()
-    authorities.add(SimpleGrantedAuthority("ADMIN"))
+    authorities.add(SimpleGrantedAuthority("ADMIN")) // 暂时没有添加用户权限
     val workUser = workUserService.loadWorkUserByName(username)
     return if (workUser != null) { // 加密
       User(workUser.username, BCryptPasswordEncoder().encode(workUser.password), authorities);
     } else {
-      null
+      throw UsernameNotFoundException("用户名不存在")
     }
   }
 }
