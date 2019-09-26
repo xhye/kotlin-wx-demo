@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
+<!--  <property resource="logback.xml"/>-->
+  <property name="LOG_INFO_HOME" value="./log/info"/>
+  <property name="LOG_ERROR_HOME" value="./log/error"/>
   <property resource="logback.xml"/>
   <appender name="CONSOLE-LOG" class="ch.qos.logback.core.ConsoleAppender">
     <layout class="ch.qos.logback.classic.PatternLayout">

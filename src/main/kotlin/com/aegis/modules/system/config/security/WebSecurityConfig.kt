@@ -3,9 +3,10 @@ package com.aegis.modules.system.config.security
 
 import com.aegis.modules.system.config.jwt.JwtAccessDeniedHandler
 import com.aegis.modules.system.config.jwt.JwtAuthenticationEntryPoint
-import com.aegis.modules.system.filters.JwtAuthorizationTokenFilter
+import com.aegis.modules.system.config.filters.JwtAuthorizationTokenFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Lazy
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity

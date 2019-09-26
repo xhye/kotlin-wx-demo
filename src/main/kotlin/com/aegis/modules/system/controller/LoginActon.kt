@@ -1,14 +1,14 @@
 package com.aegis.modules.system.controller
 
 import com.aegis.bean.Response
-import com.aegis.kotlin.successWithCode
+import com.aegis.kotlin.response
 import com.aegis.kotlin.successWithData
+import com.aegis.modules.qywork.service.QYUserService
 import com.aegis.modules.system.model.entity.WorkUser
 import com.aegis.modules.system.service.WorkUserService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.web.bind.annotation.*
 import java.security.Principal
 import javax.annotation.security.RolesAllowed
 
@@ -21,24 +21,31 @@ import javax.annotation.security.RolesAllowed
  */
 @RestController
 @RequestMapping("system")
-class LoginActon(private val workUserService: WorkUserService) {
+class LoginActon(private val workUserService: WorkUserService, private val qyUserServicee: QYUserService) {
+
+  @Autowired
+  private val redisTemplate: RedisTemplate<String, String>? = null
 
   @PostMapping("login")
-  fun login(user: WorkUser): Response<Any> {
-    if (user.userId == null) {
-      return successWithCode(201)
+  fun login(@RequestBody user: WorkUser): Response<Any> {
+    val resultMap = qyUserServicee.codeToUserId(user.code!!)
+    return if (resultMap["isQYUser"] as Boolean) {
+      successWithData(workUserService.loginByUserIdAndGenerateToken(resultMap["userId"].toString()))
+    } else {
+      response(200, "你不是当前企业用户！")
     }
-    return successWithData(workUserService.loginByUserIdAndGenerateToken(user.userId!!))
   }
 
   @PostMapping("logout")
-  fun logout(): Response<Any> {
+  fun logout(principal: Principal): Response<Any> {
+    println("principal.name ${principal.name}")
+    redisTemplate!!.delete(principal.name)
     return successWithData(true)
   }
+
   @GetMapping("user")
   @RolesAllowed("GUEST")
   fun test(principal: Principal): Response<Any> {  // Authentication authentication
-    println("principal $principal")
     return successWithData(principal)
   }
 }

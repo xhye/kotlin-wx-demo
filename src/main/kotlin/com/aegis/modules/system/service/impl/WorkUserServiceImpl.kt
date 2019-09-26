@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import wuhao.tools.utils.JsonUtils
-import java.util.ArrayList
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -32,22 +32,21 @@ class WorkUserServiceImpl(private val workUserDAO: WorkUserDAO, private val jwtT
   @Value("\${jwt.expiration}")
   private val expiration: Long? = null
 
-
   @Autowired
   private val redisTemplate: RedisTemplate<String, String>? = null
 
   override fun loginByUserIdAndGenerateToken(userId: String): WorkUser? {
-    val authorities = ArrayList<GrantedAuthority>()
-    authorities.add(SimpleGrantedAuthority("ADMIN")) // 暂时没有添加用户权限
-    authorities.add(SimpleGrantedAuthority("USER")) // 暂时没有添加用户权限
-    authorities.add(SimpleGrantedAuthority("GUEST")) // 暂时没有添加用户权限
+    val authorities = ArrayList<String>()
+    authorities.add("ADMIN") // 暂时没有添加用户权限
+    authorities.add("USER") // 暂时没有添加用户权限
+    authorities.add("GUEST") // 暂时没有添加用户权限
     val workUser = workUserDAO.loadWorkUserByName(userId)
-    if (workUser != null) { // 加密
-      workUser.authorities = authorities
-      val authentication = UsernamePasswordAuthenticationToken(workUser, null, workUser.authorities)
-      workUser.token = jwtTokenUtil.createJWT(authentication,true)
+    if (workUser != null) {
+      workUser.authority = authorities
+      val authentication = UsernamePasswordAuthenticationToken(workUser, workUser.password, workUser.getAuthorities())
+      workUser.token = jwtTokenUtil.createJWT(workUser,true)
       SecurityContextHolder.getContext().authentication = authentication
-      redisTemplate!!.opsForValue().set(workUser.token!!, JsonUtils.toJson(authentication)!!, expiration!!,TimeUnit.SECONDS) // token 用户 存redis
+      redisTemplate!!.opsForValue().set(workUser.token!!, JsonUtils.toJson(workUser)!!, expiration!!/1000, TimeUnit.SECONDS) // token 用户 存redis
       return workUser
     } else {
       throw UsernameNotFoundException("用户不存在")
@@ -55,14 +54,11 @@ class WorkUserServiceImpl(private val workUserDAO: WorkUserDAO, private val jwtT
   }
 
   override fun loadUserByUsername(username: String?): UserDetails {
-    val authorities = ArrayList<GrantedAuthority>()
-    authorities.add(SimpleGrantedAuthority("ADMIN")) // 暂时没有添加用户权限
     val workUser = workUserDAO.loadWorkUserByName(username!!)
     if (workUser != null) {
-      workUser.authorities = authorities
       return workUser
     } else {
-      throw UsernameNotFoundException("用户名不存在")
+      throw UsernameNotFoundException("用户不存在")
     }
   }
 

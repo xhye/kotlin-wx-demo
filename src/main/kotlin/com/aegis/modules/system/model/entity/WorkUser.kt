@@ -1,8 +1,11 @@
 package com.aegis.modules.system.model.entity
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import java.util.*
 
 /**
  * 企业微信用户
@@ -18,6 +21,10 @@ data class WorkUser(
    * 企业微信用户id
    */
   var id: Int? = null,
+  /**
+   * 企业微信授权code 换取用户信息
+   */
+  var code: String? = null,
   /**
    * 企业微信用户id
    */
@@ -40,7 +47,7 @@ data class WorkUser(
   /**
    * 用户所拥有的权限
    */
-  var authorities: List<GrantedAuthority> = emptyList(),
+  var authority: List<String> = emptyList(),
 
   /**
    * 用户的账号是否过期,过期的账号无法通过授权验证. true 账号未过期
@@ -60,7 +67,12 @@ data class WorkUser(
   var enabled: Boolean = true) : UserDetails {
 
 
+  @JsonIgnore
   override fun getAuthorities(): Collection<GrantedAuthority>? {
+    val authorities = ArrayList<GrantedAuthority>()
+    this.authority.forEach{
+      authorities.add(SimpleGrantedAuthority(it))
+    }
     return authorities
   }
 
@@ -85,6 +97,6 @@ data class WorkUser(
   }
 
   override fun isEnabled(): Boolean {
-    return enabled!!
+    return enabled
   }
 }
